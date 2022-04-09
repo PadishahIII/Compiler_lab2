@@ -1,0 +1,19 @@
+a=1
+while((a<=17))
+    do
+    echo "./parser ex$((a))"
+    ./parser ex$((a))
+    #sleep 1
+    a=$((a+1))
+    done
+
+#./parser ex1
+#./parser ex2
+#./parser ex3
+#./parser ex4
+#./parser ex5
+#./parser ex6
+#./parser ex7
+#./parser ex8
+#./parser ex9
+#./parser ex10
