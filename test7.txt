@@ -1,0 +1,5 @@
+int main()
+{
+float i ;
+i +10;
+}

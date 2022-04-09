@@ -68,13 +68,13 @@ StructSpecifier: STRUCT OptTag LC DefList RC {
 
     struct_*structpos = getstructstr($2->content);
 
+    //将DefList中的域加入结构体节点
+    addstructfield(structpos,$4);
+
     //Error15  检查结构体域是否重复定义
     char*errname = checkmultifield(structpos);
     if(errname!=NULL)
         printf("Error type 15 at line %d:Redefined field '%s'\n",yylineno,errname);
-
-    //将DefList中的域加入结构体节点
-    addstructfield(structpos,$4);
 }
     |STRUCT Tag {//TODO:struct define
         $$=newTree("StructSpecifier",nodeNum,2,$1,$2);
@@ -124,8 +124,9 @@ VarList: ParamDec COMMA VarList {$$=newTree("VarList",nodeNum,3,$1,$2,$3);}
 ParamDec: Specifier VarDec {
     $$=newTree("ParamDec",nodeNum,2,$1,$2);
     //Error3
-    if(findvar($2)||findarray($2)||findstruct($2))
-        printf("Error type 3 at line %d:Redefined variable '%s'.\n",yylineno,$2->content);
+    if(!(instruct&&LCnum))
+        if(findvar($2)||findarray($2)||findstruct($2))
+            printf("Error type 3 at line %d:Redefined variable '%s'.\n",yylineno,$2->content);
     else if($2->tag==4)
         newarray(2,$1,$2);
     else 
@@ -159,8 +160,9 @@ DefList: {$$=newTree("DecList",nodeNum,0,-1);}
 Def: Specifier DecList SEMI {
     $$=newTree("Def",nodeNum,3,$1,$2,$3);
     //Error3
-    if(findvar($2)||findarray($2))//||findstructstr(typevar($2))
-        printf("Error type 3 at line %d:Redefined variable '%s'.\n",yylineno,$2->content);
+    if(!(instruct&&LCnum))
+        if(findvar($2)||findarray($2)||findstructstr($2->content)||findstructstr(typevar($2)))//
+            printf("Error type 3 at line %d:Redefined variable '%s'.\n",yylineno,$2->content);
     else if($2->tag==4)
         newarray(2,$1,$2);
     else 

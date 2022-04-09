@@ -547,11 +547,11 @@ static const yytype_int16 yyrline[] =
 {
        0,    32,    32,    34,    35,    37,    40,    41,    47,    49,
       50,    54,    55,    60,    79,    89,    90,    92,    96,    97,
-     102,   111,   121,   122,   124,   137,   139,   140,   142,   143,
-     144,   149,   150,   151,   152,   156,   157,   159,   169,   171,
-     172,   174,   175,   179,   193,   194,   195,   196,   202,   208,
-     214,   220,   221,   222,   223,   239,   248,   257,   272,   279,
-     284,   290,   291
+     102,   111,   121,   122,   124,   138,   140,   141,   143,   144,
+     145,   150,   151,   152,   153,   157,   158,   160,   171,   173,
+     174,   176,   177,   181,   195,   196,   197,   198,   204,   210,
+     216,   222,   223,   224,   225,   241,   250,   259,   274,   281,
+     286,   292,   293
 };
 #endif
 
@@ -1408,13 +1408,13 @@ yyreduce:
 
     struct_*structpos = getstructstr((yyvsp[-3].type_tree)->content);
 
+    //将DefList中的域加入结构体节点
+    addstructfield(structpos,(yyvsp[-1].type_tree));
+
     //Error15  检查结构体域是否重复定义
     char*errname = checkmultifield(structpos);
     if(errname!=NULL)
         printf("Error type 15 at line %d:Redefined field '%s'\n",yylineno,errname);
-
-    //将DefList中的域加入结构体节点
-    addstructfield(structpos,(yyvsp[-1].type_tree));
 }
 #line 1420 "syntax.tab.c"
     break;
@@ -1511,127 +1511,129 @@ yyreduce:
                            {
     (yyval.type_tree)=newTree("ParamDec",nodeNum,2,(yyvsp[-1].type_tree),(yyvsp[0].type_tree));
     //Error3
-    if(findvar((yyvsp[0].type_tree))||findarray((yyvsp[0].type_tree))||findstruct((yyvsp[0].type_tree)))
-        printf("Error type 3 at line %d:Redefined variable '%s'.\n",yylineno,(yyvsp[0].type_tree)->content);
+    if(!(instruct&&LCnum))
+        if(findvar((yyvsp[0].type_tree))||findarray((yyvsp[0].type_tree))||findstruct((yyvsp[0].type_tree)))
+            printf("Error type 3 at line %d:Redefined variable '%s'.\n",yylineno,(yyvsp[0].type_tree)->content);
     else if((yyvsp[0].type_tree)->tag==4)
         newarray(2,(yyvsp[-1].type_tree),(yyvsp[0].type_tree));
     else 
         newvar(2,(yyvsp[-1].type_tree),(yyvsp[0].type_tree));
 }
-#line 1522 "syntax.tab.c"
+#line 1523 "syntax.tab.c"
     break;
 
   case 25: /* CompSt: LC DefList StmtList RC  */
-#line 137 "syntax.y"
+#line 138 "syntax.y"
                                {(yyval.type_tree)=newTree("CompSt",nodeNum,4,(yyvsp[-3].type_tree),(yyvsp[-2].type_tree),(yyvsp[-1].type_tree),(yyvsp[0].type_tree));}
-#line 1528 "syntax.tab.c"
+#line 1529 "syntax.tab.c"
     break;
 
   case 26: /* StmtList: %empty  */
-#line 139 "syntax.y"
+#line 140 "syntax.y"
           {(yyval.type_tree)=newTree("StmtList",nodeNum,0,-1);}
-#line 1534 "syntax.tab.c"
+#line 1535 "syntax.tab.c"
     break;
 
   case 27: /* StmtList: Stmt StmtList  */
-#line 140 "syntax.y"
+#line 141 "syntax.y"
                    {(yyval.type_tree)=newTree("StmtList",nodeNum,2,(yyvsp[-1].type_tree),(yyvsp[0].type_tree));}
-#line 1540 "syntax.tab.c"
+#line 1541 "syntax.tab.c"
     break;
 
   case 28: /* Stmt: Exp SEMI  */
-#line 142 "syntax.y"
+#line 143 "syntax.y"
                {(yyval.type_tree)=newTree("Stmt",nodeNum,2,(yyvsp[-1].type_tree),(yyvsp[0].type_tree));}
-#line 1546 "syntax.tab.c"
+#line 1547 "syntax.tab.c"
     break;
 
   case 29: /* Stmt: CompSt  */
-#line 143 "syntax.y"
+#line 144 "syntax.y"
             {(yyval.type_tree)=newTree("Stmt",nodeNum,1,(yyvsp[0].type_tree));}
-#line 1552 "syntax.tab.c"
+#line 1553 "syntax.tab.c"
     break;
 
   case 30: /* Stmt: RETURN Exp SEMI  */
-#line 144 "syntax.y"
+#line 145 "syntax.y"
                      {
         (yyval.type_tree)=newTree("Stmt",nodeNum,3,(yyvsp[-2].type_tree),(yyvsp[-1].type_tree),(yyvsp[0].type_tree));
         //Error8
         getrtype((yyvsp[-1].type_tree));
 }
-#line 1562 "syntax.tab.c"
+#line 1563 "syntax.tab.c"
     break;
 
   case 31: /* Stmt: IF LP Exp RP Stmt  */
-#line 149 "syntax.y"
+#line 150 "syntax.y"
                                              {(yyval.type_tree)=newTree("Stmt",nodeNum,5,(yyvsp[-4].type_tree),(yyvsp[-3].type_tree),(yyvsp[-2].type_tree),(yyvsp[-1].type_tree),(yyvsp[0].type_tree));}
-#line 1568 "syntax.tab.c"
+#line 1569 "syntax.tab.c"
     break;
 
   case 32: /* Stmt: IF LP Exp RP Stmt ELSE Stmt  */
-#line 150 "syntax.y"
+#line 151 "syntax.y"
                                  {(yyval.type_tree)=newTree("Stmt",nodeNum,7,(yyvsp[-6].type_tree),(yyvsp[-5].type_tree),(yyvsp[-4].type_tree),(yyvsp[-3].type_tree),(yyvsp[-2].type_tree),(yyvsp[-1].type_tree),(yyvsp[0].type_tree));}
-#line 1574 "syntax.tab.c"
+#line 1575 "syntax.tab.c"
     break;
 
   case 33: /* Stmt: WHILE LP Exp RP Stmt  */
-#line 151 "syntax.y"
+#line 152 "syntax.y"
                           {(yyval.type_tree)=newTree("Stmt",nodeNum,5,(yyvsp[-4].type_tree),(yyvsp[-3].type_tree),(yyvsp[-2].type_tree),(yyvsp[-1].type_tree),(yyvsp[0].type_tree));}
-#line 1580 "syntax.tab.c"
+#line 1581 "syntax.tab.c"
     break;
 
   case 35: /* DefList: %empty  */
-#line 156 "syntax.y"
+#line 157 "syntax.y"
          {(yyval.type_tree)=newTree("DecList",nodeNum,0,-1);}
-#line 1586 "syntax.tab.c"
+#line 1587 "syntax.tab.c"
     break;
 
   case 36: /* DefList: Def DefList  */
-#line 157 "syntax.y"
+#line 158 "syntax.y"
                  {(yyval.type_tree)=newTree("DecList",nodeNum,2,(yyvsp[-1].type_tree),(yyvsp[0].type_tree));}
-#line 1592 "syntax.tab.c"
+#line 1593 "syntax.tab.c"
     break;
 
   case 37: /* Def: Specifier DecList SEMI  */
-#line 159 "syntax.y"
+#line 160 "syntax.y"
                             {
     (yyval.type_tree)=newTree("Def",nodeNum,3,(yyvsp[-2].type_tree),(yyvsp[-1].type_tree),(yyvsp[0].type_tree));
     //Error3
-    if(findvar((yyvsp[-1].type_tree))||findarray((yyvsp[-1].type_tree)))//||findstructstr(typevar($2))
-        printf("Error type 3 at line %d:Redefined variable '%s'.\n",yylineno,(yyvsp[-1].type_tree)->content);
+    if(!(instruct&&LCnum))
+        if(findvar((yyvsp[-1].type_tree))||findarray((yyvsp[-1].type_tree))||findstructstr((yyvsp[-1].type_tree)->content)||findstructstr(typevar((yyvsp[-1].type_tree))))//
+            printf("Error type 3 at line %d:Redefined variable '%s'.\n",yylineno,(yyvsp[-1].type_tree)->content);
     else if((yyvsp[-1].type_tree)->tag==4)
         newarray(2,(yyvsp[-2].type_tree),(yyvsp[-1].type_tree));
     else 
         newvar(2,(yyvsp[-2].type_tree),(yyvsp[-1].type_tree));
 }
-#line 1607 "syntax.tab.c"
+#line 1609 "syntax.tab.c"
     break;
 
   case 39: /* DecList: Dec  */
-#line 171 "syntax.y"
+#line 173 "syntax.y"
             {(yyval.type_tree)=newTree("DecList",nodeNum,1,(yyvsp[0].type_tree));}
-#line 1613 "syntax.tab.c"
+#line 1615 "syntax.tab.c"
     break;
 
   case 40: /* DecList: Dec COMMA DecList  */
-#line 172 "syntax.y"
+#line 174 "syntax.y"
                        {(yyval.type_tree)=newTree("DecList",nodeNum,3,(yyvsp[-2].type_tree),(yyvsp[-1].type_tree),(yyvsp[0].type_tree));}
-#line 1619 "syntax.tab.c"
+#line 1621 "syntax.tab.c"
     break;
 
   case 41: /* Dec: VarDec  */
-#line 174 "syntax.y"
+#line 176 "syntax.y"
             {(yyval.type_tree)=newTree("Dec",nodeNum,1,(yyvsp[0].type_tree));}
-#line 1625 "syntax.tab.c"
+#line 1627 "syntax.tab.c"
     break;
 
   case 42: /* Dec: VarDec ASSIGNOP Exp  */
-#line 175 "syntax.y"
+#line 177 "syntax.y"
                          {(yyval.type_tree)=newTree("Dec",nodeNum,3,(yyvsp[-2].type_tree),(yyvsp[-1].type_tree),(yyvsp[0].type_tree));}
-#line 1631 "syntax.tab.c"
+#line 1633 "syntax.tab.c"
     break;
 
   case 43: /* Exp: Exp ASSIGNOP Exp  */
-#line 179 "syntax.y"
+#line 181 "syntax.y"
                       {
         (yyval.type_tree)=newTree("Exp",nodeNum,3,(yyvsp[-2].type_tree),(yyvsp[-1].type_tree),(yyvsp[0].type_tree));
         //Error5
@@ -1646,91 +1648,91 @@ yyreduce:
             printf("Error type 6 at line %d:The left-hand side of the assignment must be a variable.\n",yylineno);
         }
     }
-#line 1650 "syntax.tab.c"
+#line 1652 "syntax.tab.c"
     break;
 
   case 44: /* Exp: Exp AND Exp  */
-#line 193 "syntax.y"
+#line 195 "syntax.y"
                  {(yyval.type_tree)=newTree("Exp",nodeNum,3,(yyvsp[-2].type_tree),(yyvsp[-1].type_tree),(yyvsp[0].type_tree));}
-#line 1656 "syntax.tab.c"
+#line 1658 "syntax.tab.c"
     break;
 
   case 45: /* Exp: Exp OR Exp  */
-#line 194 "syntax.y"
+#line 196 "syntax.y"
                 {(yyval.type_tree)=newTree("Exp",nodeNum,3,(yyvsp[-2].type_tree),(yyvsp[-1].type_tree),(yyvsp[0].type_tree));}
-#line 1662 "syntax.tab.c"
+#line 1664 "syntax.tab.c"
     break;
 
   case 46: /* Exp: Exp RELOP Exp  */
-#line 195 "syntax.y"
+#line 197 "syntax.y"
                    {(yyval.type_tree)=newTree("Exp",nodeNum,3,(yyvsp[-2].type_tree),(yyvsp[-1].type_tree),(yyvsp[0].type_tree));}
-#line 1668 "syntax.tab.c"
+#line 1670 "syntax.tab.c"
     break;
 
   case 47: /* Exp: Exp PLUS Exp  */
-#line 196 "syntax.y"
+#line 198 "syntax.y"
                   {
         (yyval.type_tree)=newTree("Exp",nodeNum,3,(yyvsp[-2].type_tree),(yyvsp[-1].type_tree),(yyvsp[0].type_tree));
         //Error7
         if(strcmp((yyvsp[-2].type_tree)->numtype,(yyvsp[0].type_tree)->numtype))
             printf("Error type 7 at line %d:Type mismatched for operands.\n",yylineno);
     }
-#line 1679 "syntax.tab.c"
+#line 1681 "syntax.tab.c"
     break;
 
   case 48: /* Exp: Exp MINUS Exp  */
-#line 202 "syntax.y"
+#line 204 "syntax.y"
                    {
         (yyval.type_tree)=newTree("Exp",nodeNum,3,(yyvsp[-2].type_tree),(yyvsp[-1].type_tree),(yyvsp[0].type_tree));
         //Error7
         if(strcmp((yyvsp[-2].type_tree)->numtype,(yyvsp[0].type_tree)->numtype))
             printf("Error type 7 at line %d:Type mismatched for operands.\n",yylineno);
     }
-#line 1690 "syntax.tab.c"
+#line 1692 "syntax.tab.c"
     break;
 
   case 49: /* Exp: Exp STAR Exp  */
-#line 208 "syntax.y"
+#line 210 "syntax.y"
                   {
         (yyval.type_tree)=newTree("Exp",nodeNum,3,(yyvsp[-2].type_tree),(yyvsp[-1].type_tree),(yyvsp[0].type_tree));
         //Error7
         if(strcmp((yyvsp[-2].type_tree)->numtype,(yyvsp[0].type_tree)->numtype))
             printf("Error type 7 at line %d:Type mismatched for operands.\n",yylineno);
     }
-#line 1701 "syntax.tab.c"
+#line 1703 "syntax.tab.c"
     break;
 
   case 50: /* Exp: Exp DIV Exp  */
-#line 214 "syntax.y"
+#line 216 "syntax.y"
                  {
         (yyval.type_tree)=newTree("Exp",nodeNum,3,(yyvsp[-2].type_tree),(yyvsp[-1].type_tree),(yyvsp[0].type_tree));
         //Error7
         if(strcmp((yyvsp[-2].type_tree)->numtype,(yyvsp[0].type_tree)->numtype))
             printf("Error type 7 at line %d:Type mismatched for operands.\n",yylineno);
     }
-#line 1712 "syntax.tab.c"
+#line 1714 "syntax.tab.c"
     break;
 
   case 51: /* Exp: LP Exp RP  */
-#line 220 "syntax.y"
+#line 222 "syntax.y"
                {(yyval.type_tree)=newTree("Exp",nodeNum,3,(yyvsp[-2].type_tree),(yyvsp[-1].type_tree),(yyvsp[0].type_tree));}
-#line 1718 "syntax.tab.c"
+#line 1720 "syntax.tab.c"
     break;
 
   case 52: /* Exp: MINUS Exp  */
-#line 221 "syntax.y"
+#line 223 "syntax.y"
                {(yyval.type_tree)=newTree("Exp",nodeNum,2,(yyvsp[-1].type_tree),(yyvsp[0].type_tree));}
-#line 1724 "syntax.tab.c"
+#line 1726 "syntax.tab.c"
     break;
 
   case 53: /* Exp: NOT Exp  */
-#line 222 "syntax.y"
+#line 224 "syntax.y"
              {(yyval.type_tree)=newTree("Exp",nodeNum,2,(yyvsp[-1].type_tree),(yyvsp[0].type_tree));}
-#line 1730 "syntax.tab.c"
+#line 1732 "syntax.tab.c"
     break;
 
   case 54: /* Exp: ID LP Args RP  */
-#line 223 "syntax.y"
+#line 225 "syntax.y"
                    {
         (yyval.type_tree)=newTree("Exp",nodeNum,4,(yyvsp[-3].type_tree),(yyvsp[-2].type_tree),(yyvsp[-1].type_tree),(yyvsp[0].type_tree));
         //Error11
@@ -1747,11 +1749,11 @@ yyreduce:
             printf("%s)\n",va_type[va_num-1]);
         }
     }
-#line 1751 "syntax.tab.c"
+#line 1753 "syntax.tab.c"
     break;
 
   case 55: /* Exp: ID LP RP  */
-#line 239 "syntax.y"
+#line 241 "syntax.y"
               {
         (yyval.type_tree)=newTree("Exp",nodeNum,3,(yyvsp[-2].type_tree),(yyvsp[-1].type_tree),(yyvsp[0].type_tree));
         //Error11
@@ -1761,11 +1763,11 @@ yyreduce:
         else if(!findfunc((yyvsp[-2].type_tree)))
             printf("Error type 2 at line %d:undefined function '%s'.\n",yylineno,(yyvsp[-2].type_tree)->content);
     }
-#line 1765 "syntax.tab.c"
+#line 1767 "syntax.tab.c"
     break;
 
   case 56: /* Exp: Exp LB Exp RB  */
-#line 248 "syntax.y"
+#line 250 "syntax.y"
                    {
         (yyval.type_tree)=newTree("Exp",nodeNum,4,(yyvsp[-3].type_tree),(yyvsp[-2].type_tree),(yyvsp[-1].type_tree),(yyvsp[0].type_tree));
         //Error10
@@ -1775,11 +1777,11 @@ yyreduce:
         if(strcmp((yyvsp[-1].type_tree)->numtype,"int"))
             printf("Error type 12 at line %d: '%f' is not an integer\n",yylineno,(yyvsp[-1].type_tree)->fltval);
 }
-#line 1779 "syntax.tab.c"
+#line 1781 "syntax.tab.c"
     break;
 
   case 57: /* Exp: Exp DOT ID  */
-#line 257 "syntax.y"
+#line 259 "syntax.y"
                 {
         (yyval.type_tree)=newTree("Exp",nodeNum,3,(yyvsp[-2].type_tree),(yyvsp[-1].type_tree),(yyvsp[0].type_tree));
         //Error1:变量使用时未定义
@@ -1795,11 +1797,11 @@ yyreduce:
         if(!checkstructfield(structpos,(yyvsp[0].type_tree)->content))
             printf("Error type 14 at line %d: Non-existent field '%s'\n",yylineno,(yyvsp[0].type_tree)->content);
 }
-#line 1799 "syntax.tab.c"
+#line 1801 "syntax.tab.c"
     break;
 
   case 58: /* Exp: ID  */
-#line 272 "syntax.y"
+#line 274 "syntax.y"
         {(yyval.type_tree)=newTree("Exp",nodeNum,1,(yyvsp[0].type_tree));
         //Error1:变量使用时未定义
         if(!findvar((yyvsp[0].type_tree))&&!findarray((yyvsp[0].type_tree)))
@@ -1807,43 +1809,43 @@ yyreduce:
         else
             (yyval.type_tree)->numtype=typevar((yyvsp[0].type_tree));
         }
-#line 1811 "syntax.tab.c"
+#line 1813 "syntax.tab.c"
     break;
 
   case 59: /* Exp: INT  */
-#line 279 "syntax.y"
+#line 281 "syntax.y"
          {
         (yyval.type_tree)=newTree("Exp",nodeNum,1,(yyvsp[0].type_tree));
         (yyval.type_tree)->numtype="int";
         (yyval.type_tree)->fltval = (yyvsp[0].type_tree)->intval;
 }
-#line 1821 "syntax.tab.c"
+#line 1823 "syntax.tab.c"
     break;
 
   case 60: /* Exp: FLOAT  */
-#line 284 "syntax.y"
+#line 286 "syntax.y"
            {
         (yyval.type_tree)=newTree("Exp",nodeNum,1,(yyvsp[0].type_tree));
         (yyval.type_tree)->numtype="float";
         (yyval.type_tree)->fltval = (yyvsp[0].type_tree)->fltval;
 }
-#line 1831 "syntax.tab.c"
+#line 1833 "syntax.tab.c"
     break;
 
   case 61: /* Args: Exp COMMA Args  */
-#line 290 "syntax.y"
+#line 292 "syntax.y"
                      {(yyval.type_tree)=newTree("Args",nodeNum,3,(yyvsp[-2].type_tree),(yyvsp[-1].type_tree),(yyvsp[0].type_tree));}
-#line 1837 "syntax.tab.c"
+#line 1839 "syntax.tab.c"
     break;
 
   case 62: /* Args: Exp  */
-#line 291 "syntax.y"
+#line 293 "syntax.y"
          {(yyval.type_tree)=newTree("Args",nodeNum,1,(yyvsp[0].type_tree));}
-#line 1843 "syntax.tab.c"
+#line 1845 "syntax.tab.c"
     break;
 
 
-#line 1847 "syntax.tab.c"
+#line 1849 "syntax.tab.c"
 
       default: break;
     }
@@ -2041,7 +2043,7 @@ yyreturnlab:
   return yyresult;
 }
 
-#line 294 "syntax.y"
+#line 296 "syntax.y"
 
 #include "lex.yy.c"
 

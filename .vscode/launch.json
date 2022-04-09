@@ -10,7 +10,7 @@
             "request": "launch",
             "program": "/home/stray/Course/大三下/编译原理/lab2/parser",
             "args": [
-                "/home/stray/Course/大三下/编译原理/lab2/ex13"
+                "/home/stray/Course/大三下/编译原理/lab2/ex15"
             ],
             "stopAtEntry": false,
             "cwd": "${fileDirname}",

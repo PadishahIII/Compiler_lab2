@@ -1,0 +1,57 @@
+#a=1
+#while((a<=17))
+#    do
+#    echo "./parser test$((a)).txt"
+#    ./parser ex$((a))
+#    #sleep 1
+#    a=$((a+1))
+#    done
+
+echo "*******************************./parser test1.txt*******************************"
+./parser test1.txt
+echo " "
+echo " "
+echo "*******************************./parser test3a.txt*******************************"
+./parser test3a.txt
+echo " "
+echo " "
+echo "*******************************./parser test3b.txt*******************************"
+./parser test3b.txt
+echo " "
+echo " "
+echo "*******************************./parser test5.txt*******************************"
+./parser test5.txt
+echo " "
+echo " "
+echo "*******************************./parser test6.txt*******************************"
+./parser test6.txt
+echo " "
+echo " "
+echo "*******************************./parser test7.txt*******************************"
+./parser test7.txt
+echo " "
+echo " "
+echo "*******************************./parser test8.txt*******************************"
+./parser test8.txt
+echo " "
+echo " "
+echo "*******************************./parser test9.txt*******************************"
+./parser test9.txt
+echo " "
+echo " "
+echo "*******************************./parser test10.txt*******************************"
+./parser test10.txt
+echo " "
+echo " "
+echo "*******************************./parser test11.txt*******************************"
+./parser test11.txt
+echo " "
+echo " "
+echo "*******************************./parser test12.txt*******************************"
+./parser test12.txt
+echo " "
+echo " "
+echo "*******************************./parser test13.txt*******************************"
+./parser test13.txt
+echo " "
+echo " "

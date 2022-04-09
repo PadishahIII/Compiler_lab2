@@ -231,7 +231,7 @@ void newfunc(int num, ...)
         {
             if (rtype[i] == NULL || strcmp(rtype[i], functail->rtype))
             {
-                printf("Error type 12 at line %d:Function return type error(%s->%s)\n", yylineno, functail->rtype, rtype[i]);
+                printf("Error type 8 at line %d:Function return type error(%s->%s)\n", yylineno, functail->rtype, rtype[i]);
             }
         }
         functail->tag = 1;

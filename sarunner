@@ -1,8 +1,10 @@
 a=1
 while((a<=17))
     do
-    echo "./parser ex$((a))"
+    echo "**************************./parser ex$((a))*******************************"
     ./parser ex$((a))
+    echo " "
+    echo " "
     #sleep 1
     a=$((a+1))
     done
