@@ -139,7 +139,7 @@ extern fieldlist fieldtail;
 extern struct_ *currentstruct;
 int checkstructfield(struct_ *, char *);
 int findstructmember(char *structtype, char *str); //查找str是否是结构体的成员
-extern int instruct;                               //但钱是否是结构体的域
+extern int instruct;                               //当前是否是结构体的域
 extern int LCnum;                                  //花括号是否闭合
 extern int structno;                               //当前是第几个结构体
 // extern fieldlist structfield[100]; //
